@@ -53,7 +53,7 @@ const Session: React.FC<Session> = ({
   );
 };
 
-const exercicePage = () => {
+const ExercicePage = () => {
   const router = useRouter();
   const { slug } = router.query;
 
@@ -105,4 +105,4 @@ const exercicePage = () => {
   );
 };
 
-export default exercicePage;
+export default ExercicePage;

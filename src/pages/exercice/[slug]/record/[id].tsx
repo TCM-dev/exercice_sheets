@@ -10,7 +10,7 @@ import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import Header from "src/features/components/Header";
 import { selectSessions, Session } from "src/features/store/sessionsSlice";
 
-const recordPage = () => {
+const RecordPage = () => {
   const router = useRouter();
   const { id } = router.query;
 
@@ -42,4 +42,4 @@ const recordPage = () => {
   );
 };
 
-export default recordPage;
+export default RecordPage;

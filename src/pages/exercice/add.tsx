@@ -5,7 +5,7 @@ import Button from "src/features/components/Button";
 import Header from "src/features/components/Header";
 import { push } from "src/features/store/exercisesSlice";
 
-const addPage = () => {
+const AddPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
   const [name, setname] = useState("");
@@ -58,4 +58,4 @@ const addPage = () => {
   );
 };
 
-export default addPage;
+export default AddPage;

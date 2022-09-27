@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import Header from "src/features/components/Header";
 import { selectSession } from "src/features/store/sessionsSlice";
 
-const sessionPage = () => {
+const SessionPage = () => {
   const router = useRouter();
   const { id } = router.query;
 
@@ -29,4 +29,4 @@ const sessionPage = () => {
   );
 };
 
-export default sessionPage;
+export default SessionPage;
