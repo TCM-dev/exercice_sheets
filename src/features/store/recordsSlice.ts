@@ -4,18 +4,12 @@ import { AppState } from "./store";
 import shortid from "shortid";
 // import { HYDRATE } from "next-redux-wrapper";
 
-// Type for our state
-export type Record = {
-  id: string;
-  exerciceSlug: string;
-  description?: string;
-  amount: number;
-  weight: number;
-  createdAt: number;
-};
-
 // Initial state
-const initialState: Record[] = [];
+const initialState: Sheets.Record[] = [];
+
+type PushRecordPayload = Sheets.RecordFormDTO & {
+  exerciceSlug: string;
+};
 
 // Actual Slice
 export const recordsSlice = createSlice({
@@ -23,12 +17,28 @@ export const recordsSlice = createSlice({
   initialState,
   reducers: {
     // Action to set the authentication status
-    push(state, action: PayloadAction<Record>) {
+    pushRecord(state, action: PayloadAction<PushRecordPayload>) {
       state.push({
         ...action.payload,
         createdAt: new Date().getTime(),
         id: shortid.generate(),
       });
+    },
+
+    updateRecord(
+      state,
+      action: PayloadAction<{ id: string; form: Sheets.RecordFormDTO }>
+    ) {
+      return state.map((record) => {
+        if (record.id === action.payload.id) {
+          return { ...record, ...action.payload.form };
+        }
+        return record;
+      });
+    },
+
+    removeRecord(state, action: PayloadAction<string>) {
+      return state.filter((record) => record.id !== action.payload);
     },
 
     // // Special reducer for hydrating the state. Special case for next-redux-wrapper
@@ -43,7 +53,7 @@ export const recordsSlice = createSlice({
   },
 });
 
-export const { push } = recordsSlice.actions;
+export const { pushRecord, updateRecord, removeRecord } = recordsSlice.actions;
 
 export const selectRecords = (slug: string) => (state: AppState) =>
   state.records.filter((record) => record.exerciceSlug === slug);

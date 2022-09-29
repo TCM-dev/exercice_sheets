@@ -1,4 +1,6 @@
-import { ArrowLeftIcon } from "@heroicons/react/24/solid";
+// import { ArrowLeftIcon } from "@heroicons/react/24/solid";
+import { ArrowBack } from "@mui/icons-material";
+import { Box, Typography } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -15,10 +17,21 @@ const Header: React.FC<HeaderProps> = ({ back, children }) => {
   };
 
   return (
-    <div className="flex gap-2 items-center my-8">
-      {back && <ArrowLeftIcon className="h-8 w-8 cursor-pointer" onClick={goBack} />}
-      <h1>{children}</h1>
-    </div>
+    <Box
+      sx={{
+        marginTop: 4,
+        marginBottom: 4,
+        // paddingLeft: 2,
+        // paddingRight: 2,
+        display: "flex",
+        alignItems: "center",
+        gap: 1,
+      }}
+    >
+      {back && <ArrowBack sx={{ cursor: "pointer" }} onClick={goBack} />}
+      {back && <Typography variant="h6">{children}</Typography>}
+      {!back && <Typography variant="h4">{children}</Typography>}
+    </Box>
   );
 };
 

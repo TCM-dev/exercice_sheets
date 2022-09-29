@@ -1,32 +1,37 @@
+import {
+  Box,
+  Container,
+  Fab,
+  List,
+  ListSubheader,
+  Typography,
+} from "@mui/material";
 import type { NextPage } from "next";
 import Head from "next/head";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import Button from "src/features/components/Button";
+import Exercice from "src/features/exercices/components/Exercice";
+import { selectExercices } from "src/features/store/exercisesSlice";
+import AddIcon from "@mui/icons-material/Add";
+import NextLinkComposed from "src/features/components/NextLinkComposed";
 import Header from "src/features/components/Header";
-import { Exercice, selectExercices } from "src/features/store/exercisesSlice";
-import styles from "../styles/Home.module.css";
-
 // interface ExerciceProps {
 //   name: string;
 //   description?: string;
 // }
 
-const Exercice: React.FC<Exercice> = ({ name, slug, description }) => {
-  return (
-    <Link href={`/exercice/${slug}`}>
-      <a className="row">
-        <div className="mb-2">
-          <span className="title">{name}</span>
-        </div>
-        <p className="description">{description}</p>
-      </a>
-    </Link>
-  );
-};
+// const Exercice: React.FC<Exercice> = ({ name, slug, description }) => {
+//   return (
+//     <Link href={`/exercice/${slug}`}>
+//       <a className="row">
+//         <div className="mb-2">
+//           <span className="title">{name}</span>
+//         </div>
+//         <p className="description">{description}</p>
+//       </a>
+//     </Link>
+//   );
+// };
 
 const Home: NextPage = () => {
   const exercices = useSelector(selectExercices);
@@ -43,13 +48,25 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" /> */}
       </Head>
 
-      <Header>Accueil</Header>
+      <Container>
+        <Header>Accueil</Header>
 
-      <Button href="exercice/add">Ajouter un exercice</Button>
+        <List component="nav">
+          <ListSubheader disableGutters>Non catégorisé (0)</ListSubheader>
+          {exercices.map((exercice) => (
+            <Exercice key={exercice.slug} {...exercice} />
+          ))}
+        </List>
+      </Container>
 
-      {exercices.map((exercice) => (
-        <Exercice key={exercice.slug} {...exercice} />
-      ))}
+      <Fab
+        color="primary"
+        component={NextLinkComposed}
+        href={`/exercice/add`}
+        sx={{ position: "absolute", bottom: 16, right: 16 }}
+      >
+        <AddIcon />
+      </Fab>
     </div>
   );
 };

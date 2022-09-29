@@ -1,48 +1,30 @@
-import { TextField } from "@mui/material";
+import { Container, TextField } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { FormEvent, useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import Button from "src/features/components/Button";
 import Header from "src/features/components/Header";
-import { push } from "src/features/store/sessionsSlice";
+import Form from "src/features/sessions/components/Form";
+import { pushRecord } from "src/features/store/recordsSlice";
+import { pushSession } from "src/features/store/sessionsSlice";
 
 const AddPage = () => {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { slug: exerciceSlug } = router.query;
-  const [description, setdescription] = useState("");
+  const slug = router.query.slug as string;
 
-  const redirectToHome = useCallback(() => router.back(), []);
-
-  const addRecord = useCallback(
-    // @ts-ignore
-    () => dispatch(push({ description, exerciceSlug })),
-    [description, exerciceSlug]
-  );
-
-  const handleSubmit = (formEvent: FormEvent) => {
-    formEvent?.preventDefault();
-    addRecord();
-    redirectToHome();
+  const handleSubmit = (payload: Sheets.SessionFormDTO) => {
+    console.log(payload);
+    dispatch(pushSession({ ...payload, exerciceSlug: slug }));
+    router.back();
   };
 
   return (
     <div className="container">
-      <Header back>Ajouter une session</Header>
-
-      <form className="form" onSubmit={handleSubmit}>
-        <label htmlFor="description">Description de la session</label>
-        <textarea
-          id="description"
-          name="description"
-          className="form-input rounded bg-neutral-800"
-          value={description}
-          onChange={(e) => setdescription(e.target.value)}
-        ></textarea>
-
-        <Button>Ajouter</Button>
-        <Button href="/">Annuler</Button>
-      </form>
+      <Container maxWidth="sm">
+        <Header back>Ajouter une session</Header>
+        <Form onSubmit={handleSubmit} />
+      </Container>
     </div>
   );
 };

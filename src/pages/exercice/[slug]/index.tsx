@@ -1,66 +1,87 @@
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import Button from "src/features/components/Button";
 import { selectExercice } from "src/features/store/exercisesSlice";
 import { selectRecords } from "src/features/store/recordsSlice";
-import type { Record } from "src/features/store/recordsSlice";
 import Link from "next/link";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import Header from "src/features/components/Header";
-import { selectSessions, Session } from "src/features/store/sessionsSlice";
+import { selectSessions } from "src/features/store/sessionsSlice";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Divider,
+  Fab,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  ListSubheader,
+  SwipeableDrawer,
+} from "@mui/material";
+import { NextLinkComposed } from "src/features/components/NextLinkComposed";
+import { Add, Edit } from "@mui/icons-material";
+import { Container } from "@mui/system";
+import Record from "src/features/records/components/Record";
+import Session from "src/features/sessions/components/Session";
 
-const Record: React.FC<Record> = ({
-  id,
-  exerciceSlug: slug,
-  createdAt,
-  weight,
-  amount,
-}) => {
-  const createdAtDate = new Date(createdAt);
-  return (
-    <Link href={`/exercice/${slug}/record/${id}`}>
-      <a className="row">
-        <div className="flex items-center justify-between gap-2 mb-2">
-          <p className="description">{createdAtDate.toLocaleDateString()}</p>
-        </div>
-        <p className="text-gray-100">
-          {weight}kg x {amount}
-        </p>
-        {/* <p className="description inline-block">{description}</p> */}
-      </a>
-    </Link>
-  );
-};
+// const Record: React.FC<Record> = ({
+//   id,
+//   exerciceSlug: slug,
+//   createdAt,
+//   weight,
+//   amount,
+// }) => {
+//   const createdAtDate = new Date(createdAt);
+//   return (
+//     <Link href={`/exercice/${slug}/record/${id}`}>
+//       <a className="row">
+//         <div className="flex items-center justify-between gap-2 mb-2">
+//           <p className="description">{createdAtDate.toLocaleDateString()}</p>
+//         </div>
+//         <p className="text-gray-100">
+//           {weight}kg x {amount}
+//         </p>
+//         {/* <p className="description inline-block">{description}</p> */}
+//       </a>
+//     </Link>
+//   );
+// };
 
-const Session: React.FC<Session> = ({
-  id,
-  exerciceSlug: slug,
-  createdAt,
-  description,
-}) => {
-  const createdAtDate = new Date(createdAt);
-  return (
-    <Link href={`/exercice/${slug}/session/${id}`}>
-      <a className="row">
-        <div className="flex items-center justify-between gap-2 mb-2">
-          <p className="text-sm text-gray-300">
-            Session du {createdAtDate.toLocaleDateString()}
-          </p>
-        </div>
-      </a>
-    </Link>
-  );
-};
+// const Session: React.FC<Session> = ({
+//   id,
+//   exerciceSlug: slug,
+//   createdAt,
+//   description,
+// }) => {
+//   const createdAtDate = new Date(createdAt);
+//   return (
+//     <Link href={`/exercice/${slug}/session/${id}`}>
+//       <a className="row">
+//         <div className="flex items-center justify-between gap-2 mb-2">
+//           <p className="text-sm text-gray-300">
+//             Session du {createdAtDate.toLocaleDateString()}
+//           </p>
+//         </div>
+//       </a>
+//     </Link>
+//   );
+// };
 
 const ExercicePage = () => {
   const router = useRouter();
-  const { slug } = router.query;
+  const slug = router.query.slug as string;
 
   // @ts-ignore
   const exercice = useSelector(selectExercice(slug));
-  const records = useSelector(selectRecords(exercice?.slug || ""));
-  const sessions = useSelector(selectSessions(exercice?.slug || ""));
+  const records = useSelector(selectRecords(slug));
+  const sessions = useSelector(selectSessions(slug));
 
   useEffect(() => {
     console.log(exercice);
@@ -72,35 +93,67 @@ const ExercicePage = () => {
 
   return (
     <div className="container">
-      <Header back>{exercice.name}</Header>
+      <Container>
+        <Header back>{exercice.name}</Header>
 
-      <Button disabled>Supprimer</Button>
+        <h1>{exercice.name}</h1>
+        <p>{exercice.description}</p>
 
-      <h2 className="mb-1">Description</h2>
-      <p className="mb-2">{exercice.description}</p>
+        {/* Records */}
+        <List component="nav">
+          <ListSubheader disableGutters>Records</ListSubheader>
+          {records.map((record, index) => (
+            <Record
+              key={record.id}
+              {...record}
+              divider={index !== records.length - 1}
+            />
+          ))}
+          <ListItem disablePadding>
+            <ListItemButton
+              component={NextLinkComposed}
+              to={`/exercice/${slug}/record/add`}
+            >
+              <ListItemIcon>
+                <Add />
+              </ListItemIcon>
+              <ListItemText primary="Ajouter un record" />
+            </ListItemButton>
+          </ListItem>
+        </List>
 
-      <h2 className="mb-1">Records</h2>
-      <div className="mb-4">
-        {records.map((record) => (
-          <Record key={record.createdAt} {...record} />
-        ))}
-      </div>
+        {/* Sessions */}
+        <List component="nav">
+          <ListSubheader disableGutters>Sessions</ListSubheader>
+          {sessions.map((session, index) => (
+            <Session
+              key={session.id}
+              {...session}
+              divider={index !== sessions.length - 1}
+            />
+          ))}
+          <ListItem disablePadding>
+            <ListItemButton
+              component={NextLinkComposed}
+              to={`/exercice/${slug}/session/add`}
+            >
+              <ListItemIcon>
+                <Add />
+              </ListItemIcon>
+              <ListItemText primary="Ajouter une session" />
+            </ListItemButton>
+          </ListItem>
+        </List>
+      </Container>
 
-      <Button href={`/exercice/${exercice.slug}/record/add`}>
-        Ajouter un record
-      </Button>
-
-      <h2 className="mb-1">Sessions</h2>
-      <div className="mb-4">
-        {sessions.map((session) => (
-          <Session key={session.createdAt} {...session} />
-        ))}
-      </div>
-      <Button href={`/exercice/${exercice.slug}/session/add`}>
-        Ajouter une session
-      </Button>
-
-      {/* TODO flèche retour dans header plutôt */}
+      <Fab
+        color="secondary"
+        component={NextLinkComposed}
+        to={`/exercice/${slug}/edit`}
+        sx={{ position: "absolute", bottom: 16, right: 16 }}
+      >
+        <Edit />
+      </Fab>
     </div>
   );
 };

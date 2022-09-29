@@ -4,17 +4,18 @@ import { useSelector } from "react-redux";
 import Button from "src/features/components/Button";
 import { selectExercice } from "src/features/store/exercisesSlice";
 import { selectRecord, selectRecords } from "src/features/store/recordsSlice";
-import type { Record } from "src/features/store/recordsSlice";
 import Link from "next/link";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import Header from "src/features/components/Header";
-import { selectSessions, Session } from "src/features/store/sessionsSlice";
+import { NextLinkComposed } from "src/features/components/NextLinkComposed";
+import { Edit } from "@mui/icons-material";
+import { Fab } from "@mui/material";
+import session from "redux-persist/es/storage/session";
 
 const RecordPage = () => {
   const router = useRouter();
-  const { id } = router.query;
+  const id = router.query.id as string;
 
-  // @ts-ignore
   const record = useSelector(selectRecord(id));
 
   if (!record) {
@@ -23,21 +24,21 @@ const RecordPage = () => {
 
   return (
     <div className="container">
-      <Header back>{/*  */}</Header>
+      <Header back>Record</Header>
 
-      <h2 className="mb-1">Record</h2>
-      <p className="mb-2">
-        {record.weight}kg x {record.amount}
-      </p>
+      <h1>
+        {record.amount} * {record.weight}kg
+      </h1>
+      <p>{record.description}</p>
 
-      <h2 className="mb-1">Description</h2>
-      {record.description ? (
-        <p className="mb-2">{record.description}</p>
-      ) : (
-        <p className="mb-2 text-gray-500">Pas de description</p>
-      )}
-
-      {/* TODO flèche retour dans header plutôt */}
+      <Fab
+        color="secondary"
+        component={NextLinkComposed}
+        to={`/exercice/${record.exerciceSlug}/record/${id}/edit`}
+        sx={{ position: "absolute", bottom: 16, right: 16 }}
+      >
+        <Edit />
+      </Fab>
     </div>
   );
 };
