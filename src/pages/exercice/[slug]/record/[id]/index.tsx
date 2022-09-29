@@ -11,6 +11,7 @@ import { NextLinkComposed } from "src/features/components/NextLinkComposed";
 import { Edit } from "@mui/icons-material";
 import { Fab } from "@mui/material";
 import session from "redux-persist/es/storage/session";
+import { Container } from "@mui/system";
 
 const RecordPage = () => {
   const router = useRouter();
@@ -24,21 +25,23 @@ const RecordPage = () => {
 
   return (
     <div className="container">
-      <Header back>Record</Header>
+      <Container>
+        <Header back>Record</Header>
 
-      <h1>
-        {record.amount} * {record.weight}kg
-      </h1>
-      <p>{record.description}</p>
+        <h1>
+          {record.amount} * {record.weight}kg
+        </h1>
+        <p>{record.description}</p>
 
-      <Fab
-        color="secondary"
-        component={NextLinkComposed}
-        to={`/exercice/${record.exerciceSlug}/record/${id}/edit`}
-        sx={{ position: "absolute", bottom: 16, right: 16 }}
-      >
-        <Edit />
-      </Fab>
+        <Fab
+          color="secondary"
+          component={NextLinkComposed}
+          to={`/exercice/${record.exerciceSlug}/record/${id}/edit`}
+          sx={{ position: "absolute", bottom: 16, right: 16 }}
+        >
+          <Edit />
+        </Fab>
+      </Container>
     </div>
   );
 };
