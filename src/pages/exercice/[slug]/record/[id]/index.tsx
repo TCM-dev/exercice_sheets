@@ -23,6 +23,8 @@ const RecordPage = () => {
     return <></>;
   }
 
+  const createdAtDate = new Date(record.createdAt);
+
   return (
     <div className="container">
       <Container>
@@ -31,6 +33,7 @@ const RecordPage = () => {
         <h1>
           {record.amount} * {record.weight}kg
         </h1>
+        <h2>Réalisé le {createdAtDate.toLocaleDateString()}</h2>
         <p>{record.description}</p>
 
         <Fab

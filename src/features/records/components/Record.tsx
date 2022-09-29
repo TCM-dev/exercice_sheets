@@ -30,6 +30,7 @@ const Record: React.FC<RecordProps> = ({
   exerciceSlug,
   amount,
   description,
+  createdAt,
   divider,
 }) => {
   const dispatch = useDispatch();
@@ -56,6 +57,8 @@ const Record: React.FC<RecordProps> = ({
     closeDrawer();
   };
 
+  const createdAtDate = new Date(createdAt);
+
   return (
     <>
       <ListItemButton
@@ -67,7 +70,7 @@ const Record: React.FC<RecordProps> = ({
       >
         <ListItemText
           primary={`${amount} * ${weight}kg`}
-          secondary={description}
+          secondary={createdAtDate.toLocaleDateString()}
         />
       </ListItemButton>
 
